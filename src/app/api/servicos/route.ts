@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       data: {
         equipamentoId: data.equipamentoId,
         tecnicoId: session.user.id,
-        tecnicoNome: session.user.name,
+        tecnicoNome: session.user.name ?? "Tecnico",
         dataServico: new Date(data.dataServico),
         tipoServico: data.tipoServico,
         descricao: data.descricao,
