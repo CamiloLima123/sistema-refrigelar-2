@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  phone     String?
+  password  String
+  role      Role     @default(CLIENTE)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  equipamentosTecnico Equipamento[] @relation("TecnicoEquipamentos")
+  servicosTecnico     Servico[]     @relation("TecnicoServicos")
+  equipamentosCliente Equipamento[] @relation("ClienteEquipamentos")
+
+  @@map("users")
+}
+
+model Equipamento {
+  id                String   @id @default(cuid())
+  codigo            String   @unique
+  qrCode            String   @unique
+
+  // Dados do cliente
+  clienteId         String
+  cliente           User     @relation("ClienteEquipamentos", fields: [clienteId], references: [id])
+  clienteNome       String
+  clienteTelefone   String
+  clienteEmail      String?
+  clienteEndereco   String
+
+  // Dados do equipamento
+  localInstalacao   String
+  marca             String
+  modelo            String
+  numeroSerie       String
+  capacidadeBTU     String
+  tipoEquipamento   String
+
+  // Controle
+  tecnicoId         String
+  tecnico           User     @relation("TecnicoEquipamentos", fields: [tecnicoId], references: [id])
+
+  // Privacidade
+  publico           Boolean  @default(true)
+
+  // Próxima manutenção
+  proximaManutencao DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relacionamentos
+  servicos          Servico[]
+  fotos             Foto[]
+
+  @@map("equipamentos")
+}
+
+model Servico {
+  id                String   @id @default(cuid())
+
+  // Relacionamentos
+  equipamentoId     String
+  equipamento       Equipamento @relation(fields: [equipamentoId], references: [id], onDelete: Cascade)
+
+  tecnicoId         String
+  tecnico           User     @relation("TecnicoServicos", fields: [tecnicoId], references: [id])
+  tecnicoNome       String
+
+  // Dados do serviço
+  dataServico       DateTime
+  tipoServico       String
+  descricao         String   @db.Text
+  pecasUtilizadas   String?
+  observacoes       String?  @db.Text
+
+  // Assinatura
+  assinaturaCliente String?
+  assinaturaData    DateTime?
+
+  // Status
+  status            StatusServico @default(CONCLUIDO)
+
+  // Próxima manutenção recomendada
+  proximaManutencao DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relacionamentos
+  fotos             Foto[]
+
+  @@map("servicos")
+}
+
+model Foto {
+  id            String   @id @default(cuid())
+  url           String
+  descricao     String?
+
+  equipamentoId String?
+  equipamento   Equipamento? @relation(fields: [equipamentoId], references: [id], onDelete: Cascade)
+
+  servicoId     String?
+  servico       Servico?     @relation(fields: [servicoId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime @default(now())
+
+  @@map("fotos")
+}
+
+enum Role {
+  ADMIN
+  TECNICO
+  CLIENTE
+}
+
+enum StatusServico {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+  CANCELADO
+}
