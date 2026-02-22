@@ -1,7 +1,8 @@
-export default function Equipamentos() {
+export default function EquipamentosAdminPage() {
   return (
-    <div>
-      <h1>Meus Equipamentos</h1>
-    </div>
+    <main className="p-8">
+      <h1 className="text-2xl font-bold">Equipamentos</h1>
+      <p>Lista de equipamentos cadastrados.</p>
+    </main>
   )
 }
