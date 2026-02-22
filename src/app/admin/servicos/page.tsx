@@ -1,7 +1,8 @@
-export default function Servicos() {
+export default function ServicosAdminPage() {
   return (
-    <div>
-      <h1>Serviços</h1>
-    </div>
+    <main className="p-8">
+      <h1 className="text-2xl font-bold">Serviços</h1>
+      <p>Histórico de serviços.</p>
+    </main>
   )
 }
