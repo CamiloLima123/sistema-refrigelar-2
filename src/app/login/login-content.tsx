@@ -52,27 +52,27 @@ export default function LoginContent() {
   const [qrDialogOpen, setQrDialogOpen] = useState(false)
   const [scannedCode, setScannedCode] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setLoading(true)
+  setError("")
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-      callbackUrl,
-    })
+  const result = await signIn("credentials", {
+    redirect: false,
+    email,
+    password,
+  })
 
-    if (result?.error) {
-      setError("E-mail ou senha incorretos")
-      setLoading(false)
-      return
-    }
-
-    router.push(callbackUrl)
-    router.refresh()
+  if (result?.error) {
+    setError("E-mail ou senha incorretos")
+    setLoading(false)
+    return
   }
+
+  // ✅ REDIRECIONA PARA O PAINEL ADMIN
+  router.push("/admin")
+  router.refresh()
+}
 
   const handleQrScan = (code: string) => {
     setScannedCode(code)
