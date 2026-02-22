@@ -7,11 +7,11 @@ const handler = NextAuth({
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
 
       async authorize(credentials) {
-        // usuário TEMPORÁRIO para teste
+        // 🔐 LOGIN TEMPORÁRIO (ADMIN)
         if (
           credentials?.email === "admin@email.com" &&
           credentials?.password === "123456"
@@ -19,15 +19,26 @@ const handler = NextAuth({
           return {
             id: "1",
             name: "Administrador",
-            email: "admin@email.com"
+            email: "admin@email.com",
           }
         }
 
         return null
-      }
-    })
+      },
+    }),
   ],
+
+  // ✅ obrigatório no Vercel
   secret: process.env.NEXTAUTH_SECRET,
+
+  // ✅ evita problemas de sessão
+  session: {
+    strategy: "jwt",
+  },
+
+  pages: {
+    signIn: "/login",
+  },
 })
 
 export { handler as GET, handler as POST }
