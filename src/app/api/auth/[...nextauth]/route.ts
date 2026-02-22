@@ -4,15 +4,15 @@ import CredentialsProvider from "next-auth/providers/credentials"
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
 
       credentials: {
         email: { label: "Email", type: "text" },
-        password: { label: "Senha", type: "password" },
+        password: { label: "Password", type: "password" }
       },
 
-      async authorize(credentials) {
-        // LOGIN TEMPORÁRIO (teste)
+      async authorize(credentials, req) {
+        // LOGIN TEMPORÁRIO PARA TESTE
         if (
           credentials?.email === "admin@email.com" &&
           credentials?.password === "123456"
@@ -21,21 +21,14 @@ const handler = NextAuth({
             id: "1",
             name: "Administrador",
             email: "admin@email.com",
+            role: "admin" // ✅ ESSA LINHA RESOLVE O ERRO
           }
         }
 
         return null
-      },
-    }),
+      }
+    })
   ],
-
-  pages: {
-    signIn: "/login",
-  },
-
-  session: {
-    strategy: "jwt",
-  },
 
   secret: process.env.NEXTAUTH_SECRET,
 })
