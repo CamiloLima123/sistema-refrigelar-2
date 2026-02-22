@@ -4,14 +4,15 @@ import CredentialsProvider from "next-auth/providers/credentials"
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
+
       credentials: {
         email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+        password: { label: "Senha", type: "password" },
       },
 
       async authorize(credentials) {
-        // 🔐 LOGIN TEMPORÁRIO (ADMIN)
+        // LOGIN TEMPORÁRIO (teste)
         if (
           credentials?.email === "admin@email.com" &&
           credentials?.password === "123456"
@@ -28,17 +29,15 @@ const handler = NextAuth({
     }),
   ],
 
-  // ✅ obrigatório no Vercel
-  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/login",
+  },
 
-  // ✅ evita problemas de sessão
   session: {
     strategy: "jwt",
   },
 
-  pages: {
-    signIn: "/login",
-  },
+  secret: process.env.NEXTAUTH_SECRET,
 })
 
 export { handler as GET, handler as POST }
