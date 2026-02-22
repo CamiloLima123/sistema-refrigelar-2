@@ -12,7 +12,6 @@ const handler = NextAuth({
       },
 
       async authorize(credentials, req) {
-        // LOGIN TEMPORÁRIO PARA TESTE
         if (
           credentials?.email === "admin@email.com" &&
           credentials?.password === "123456"
@@ -21,7 +20,7 @@ const handler = NextAuth({
             id: "1",
             name: "Administrador",
             email: "admin@email.com",
-            role: "admin" // ✅ ESSA LINHA RESOLVE O ERRO
+            role: "admin"
           }
         }
 
